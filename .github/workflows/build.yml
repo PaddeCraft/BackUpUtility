@@ -20,7 +20,9 @@ jobs:
                       init:
                         - 'backup/__init__.py'
             - if: steps.new.outputs.init == 'true'
-              run: python3 setup.py bdist_wheel --python-tag py3
+              run: pip install wheel
+            - if: steps.new.outputs.init == 'true'
+              run: python setup.py bdist_wheel --python-tag py3
             - if: steps.new.outputs.init == 'true'
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
