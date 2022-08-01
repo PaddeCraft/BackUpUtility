@@ -41,12 +41,12 @@ excludes = [
     # ...or parts of paths.
     "__pycache__",
     # If one of the excludes is in the file's path, the file will not be copied.
-    # You can also filter for file extensions
+    # You can also filter for file extensions.
     ".tmp"
 ]
 
 [settings]
-# specify if the backup should be in a .zip-file or not.
+# specify if the backup should be in a .zip-file or not
 useZip = false
 # specify if the last backup made with this configuration should be deleted
 deleteLast = true
