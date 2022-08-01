@@ -76,7 +76,7 @@ def backup(configFileName: str = None, create_config: bool = False, version: boo
         ]
         result = prompt(questions, style={"questionmark": "#ff9d00 bold"})
         filename = result[0].lower().replace(" ", "_")
-        createDefaultConfig(filename)
+        createDefaultConfig(result[0], filename)
         print("Configuration created.")
         exit(0)
     if configFileName is None:
