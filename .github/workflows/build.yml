@@ -38,11 +38,11 @@ jobs:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
                   automatic_release_tag: "${{ steps.version.outputs.VERSION }}"
                   prerelease: false
-                  files: |
-                      ./dist/*.whl
-            # - if: steps.new.outputs.init == 'true'
-            #   uses: irongut/EditRelease@v1.2.0
-            #   with:
-            #       token: ${{ secrets.GITHUB_TOKEN }}
-            #       id: ${{ steps.version.outputs.VERSION }}
-            #       body: ${{ steps.build_changelog.outputs.changelog }}
+                  # files: |
+                  #     ./dist/*.whl
+            - if: steps.new.outputs.init == 'true'
+              uses: irongut/EditRelease@v1.2.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  id: ${{ steps.version.outputs.VERSION }}
+                  body: "pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip"
