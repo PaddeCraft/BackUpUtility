@@ -46,10 +46,10 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ github.token }}
               with:
-                  tag: '${{ steps.release.outputs.id }}'
+                  tag: '${{ steps.version.outputs.VERSION }}'
             - if: steps.new.outputs.init == 'true'
               uses: irongut/EditRelease@v1.2.0
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  id: ${{ steps.version.outputs.VERSION }}
+                  id: ${{ steps.release.outputs.id }}
                   body: "pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip"
