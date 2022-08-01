@@ -52,4 +52,4 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   id: ${{ steps.release.outputs.id }}
-                  body: "pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip"
+                  body: "## Installation command\n`pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip`"
