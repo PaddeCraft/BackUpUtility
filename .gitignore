@@ -1,0 +1,5 @@
+testBackUps
+__pycache__
+dist
+build
+BackUp.egg-info
