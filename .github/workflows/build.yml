@@ -23,10 +23,15 @@ jobs:
               run: pip install wheel
             - if: steps.new.outputs.init == 'true'
               run: python setup.py bdist_wheel --python-tag py3
+            - id: version
+              run: |
+                  version=$(python -c "import backup; print(backup.VERSION)")
+                  echo "::set-output name=VERSION::$version"
             - if: steps.new.outputs.init == 'true'
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  automatic_release_tag: "${{ steps.version.outputs.VERSION }}"
                   prerelease: false
                   files: |
                       ./dist/*.whl
