@@ -1,14 +1,17 @@
 # BackUpUtility
 
 ## What is it?
-A simple BackUp-Programm with advanced features, like excluding files with specific strings in their path.
+A simple BackUp-Programm with advanced features,\
+like excluding files with specific strings in their path.
 
 ## Installation
-Go to releases and download the latest pip wheel.
-It is named like this:
-BackUp-VERSION-py3-none-any.whl
-For installation I recommend [pipx](https://pypa.github.io/pipx/), but you can use normal pip too.
-Navgate to the directory you downloaded the file to, and type `pip[x] install BackUp-VERSION-py3-none-any.whl`
+Go to releases and download the latest pip wheel.\
+It is named like this:\
+`BackUp-VERSION-py3-none-any.whl`\
+For installation I recommend [pipx](https://pypa.github.io/pipx/),\
+but you can use normal pip too.\
+Navgate to the directory you downloaded the file to,\
+and type `pip[x] install BackUp-VERSION-py3-none-any.whl`
 
 ## Usage
 ```shell
