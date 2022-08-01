@@ -27,11 +27,11 @@ jobs:
               run: |
                   version=$(python -c "import backup; print(backup.VERSION)")
                   echo "::set-output name=VERSION::$version"
-            - name: "Build Changelog"
-              id: build_changelog
-              uses: mikepenz/release-changelog-builder-action@v2
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # - name: "Build Changelog"
+            #   id: build_changelog
+            #   uses: mikepenz/release-changelog-builder-action@v2
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - if: steps.new.outputs.init == 'true'
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
@@ -40,9 +40,9 @@ jobs:
                   prerelease: false
                   files: |
                       ./dist/*.whl
-            - if: steps.new.outputs.init == 'true'
-              uses: irongut/EditRelease@v1.2.0
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  id: ${{ steps.version.outputs.VERSION }}
-                  body: ${{ steps.build_changelog.outputs.changelog }}
+            # - if: steps.new.outputs.init == 'true'
+            #   uses: irongut/EditRelease@v1.2.0
+            #   with:
+            #       token: ${{ secrets.GITHUB_TOKEN }}
+            #       id: ${{ steps.version.outputs.VERSION }}
+            #       body: ${{ steps.build_changelog.outputs.changelog }}
