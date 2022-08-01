@@ -1,0 +1,22 @@
+name: Automatticly build wheel if version changes
+on:
+    push:
+        branches:
+            - "main"
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-python@v4
+              with:
+                  python-version: "3.7"
+                  architecture: "x64"
+            - uses: dorny/paths-filter@v2
+              id: new
+              with:
+                  filters: |
+                      init:
+                        - 'backup/__init__.py'
+            - if: steps.new.outputs.init == 'true'
+              run: python3 setup.py bdist_wheel --python-tag py3
