@@ -10,6 +10,9 @@ but you can use normal pip too.\
 Go to the latest release.\
 At the bottom of the release you'll find the pipx installation command.\
 To use normal pip, type pip instead of pipx.
+<br><br>
+To install the newest development version (latest commit),\
+type `pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/heads/main.zip`
 
 ## Usage
 ```shell

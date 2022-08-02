@@ -7,8 +7,9 @@ import shutil
 
 from rich.progress import Progress
 
-from backup.log import configure, log
 from backup.config import *
+from backup.update import update
+from backup.log import configure, log
 from backup.layout import updateInfo, terminal, infoLayout, finishLayout
 
 from backup.__init__ import VERSION
@@ -60,17 +61,20 @@ def iterateFiles(pathList, excludeList):
 
 
 @app.command()
-def backup(configFileName: str = None, create_config: bool = False, version: bool = False):
+def backup(configFileName: str = None, create_config: bool = False, version: bool = False, update: bool = False):
+    global totalFiles, totalSize, files, size, errorFiles
     if version:
         print("PaddeCraft's Backup Utility v" + VERSION)
         print("Copyright (C) PaddeCraft")
         exit(0)
-    global totalFiles, totalSize, files, size, errorFiles
+    if update:
+        update()
+        exit(0)
     if create_config:
         questions = [
             {
                 "type": "input",
-                "message": "Enter a name for your configuration",
+                "message": "Enter a name for your configuration: ",
                 "validate": EmptyInputValidator(),
             }
         ]
