@@ -23,10 +23,12 @@ layout["spacer2"].size = 2
 
 
 def updateInfo(path, totalFiles, totalSize, files, size):
-    layout["info"].update(f"""\
+    layout["info"].update(
+        f"""\
     [bold]Path:[/bold] {path}
     [bold]Total files:[/bold] {intcomma(files)}/{intcomma(totalFiles)}
-    [bold]Total size:[/bold] {naturalsize(size)}/{naturalsize(totalSize)}""")
+    [bold]Total size:[/bold] {naturalsize(size)}/{naturalsize(totalSize)}"""
+    )
     return layout
 
 
@@ -36,7 +38,8 @@ def infoLayout(text):
 
 
 def finishLayout(errors, files, size, cfg):
-    layout["info"].update(f"""\
+    layout["info"].update(
+        f"""\
         [bold]Backup finished![/bold]
         
         [bold]Total files:[/bold] {intcomma(files + errors)}
@@ -44,5 +47,6 @@ def finishLayout(errors, files, size, cfg):
         [bold]Total size:[/bold] {naturalsize(size)}
         [bold]Time taken:[/bold] {naturaldelta(datetime.now() - cfg['startTime'])}
         
-        A complete log has been written to {cfg['logPath']}.""")
+        A complete log has been written to {cfg['logPath']}."""
+    )
     return layout
