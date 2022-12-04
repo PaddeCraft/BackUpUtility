@@ -127,7 +127,7 @@ def backup(
         )
 
         # Delete last backup if the user wants to
-        if cfg["lastBackup"] and cfg["lastBackupExists"]:
+        if cfg["lastBackup"] and cfg["lastBackupExists"] and cfg["deleteLast"]:
             try:
                 if os.path.isfile(cfg["lastBackup"]):
                     os.remove(cfg["lastBackup"])
