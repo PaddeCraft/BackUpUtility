@@ -21,6 +21,8 @@ backup --configfile <FILE>      # Specify the name of the config
                                 # file, no other input needed
 backup --create-config-file     # Create new config file
 backup --version                # Show version and exit
+backup --update                 # Update pip and/or pipx package
+                                # if an update is aviable
 backup --help                   # Show help            
 ```
 
