@@ -17,74 +17,74 @@ def update():
         sys.exit(1)
 
     py = sys.executable
-    downloadUrl = (
+    download_url = (
         f"https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/{ver}.zip"
     )
 
-    pkgsPipCmd = subprocess.run(
+    pkgs_pip_cmd = subprocess.run(
         [py, "-m", "pip", "list", "--format=freeze"], capture_output=True, text=True
     )
-    pkgsPipxCmd = subprocess.run(
+    pkgs_pipx_cmd = subprocess.run(
         [py, "-m", "pipx", "list", "--json"], capture_output=True, text=True
     )
-    if pkgsPipCmd.returncode != 0:
-        pkgsPipCmd = subprocess.run(
+    if pkgs_pip_cmd.returncode != 0:
+        pkgs_pip_cmd = subprocess.run(
             ["pip", "list", "--format=freeze"], capture_output=True, text=True
         )
-        if pkgsPipCmd.returncode != 0:
-            pkgsPipCmd = subprocess.run(
+        if pkgs_pip_cmd.returncode != 0:
+            pkgs_pip_cmd = subprocess.run(
                 ["pip3", "list", "--format=freeze"], capture_output=True, text=True
             )
-    if pkgsPipxCmd.returncode != 0:
-        pkgsPipxCmd = subprocess.run(
+    if pkgs_pipx_cmd.returncode != 0:
+        pkgs_pipx_cmd = subprocess.run(
             ["pipx", "list", "--json"], capture_output=True, text=True
         )
 
-    pkgsPip = []
-    pkgsPipx = []
+    pkgs_pip = []
+    pkgs_pipx = []
 
     print("Parsing current packages...")
 
-    for p in pkgsPipCmd.stdout.splitlines():
-        pkgsPip.append({"name": p.split("==")[0], "version": p.split("==")[1]})
+    for p in pkgs_pip_cmd.stdout.splitlines():
+        pkgs_pip.append({"name": p.split("==")[0], "version": p.split("==")[1]})
 
-    for _, pkg in json.loads(pkgsPipxCmd.stdout)["venvs"].items():
-        pkgsPipx.append(
+    for _, pkg in json.loads(pkgs_pipx_cmd.stdout)["venvs"].items():
+        pkgs_pipx.append(
             {
                 "name": pkg["metadata"]["main_package"]["package"],
                 "version": pkg["metadata"]["main_package"]["package_version"],
             }
         )
 
-    backUpPip = [p for p in pkgsPip if p["name"] == "BackUp"]
+    backup_pip = [p for p in pkgs_pip if p["name"] == "BackUp"]
 
-    if len(backUpPip) != 0:
-        if backUpPip[0]["version"] != ver:
+    if len(backup_pip) != 0:
+        if backup_pip[0]["version"] != ver:
             print("Updating BackUpUtility using pip...")
             p = subprocess.run(
-                [py, "-m", "pip", "install", downloadUrl], stdout=subprocess.DEVNULL
+                [py, "-m", "pip", "install", download_url], stdout=subprocess.DEVNULL
             )
             if p.returncode != 0:
                 p = subprocess.run(
-                    ["pip", "install", downloadUrl], stdout=subprocess.DEVNULL
+                    ["pip", "install", download_url], stdout=subprocess.DEVNULL
                 )
                 if p.returncode != 0:
                     p = subprocess.run(
-                        ["pip3", "install", downloadUrl], stdout=subprocess.DEVNULL
+                        ["pip3", "install", download_url], stdout=subprocess.DEVNULL
                     )
 
-    backUpPipx = [p for p in pkgsPipx if p["name"] == "BackUp"]
+    backup_pipx = [p for p in pkgs_pipx if p["name"] == "BackUp"]
 
-    if len(backUpPipx) != 0:
-        if backUpPipx[0]["version"] != ver:
+    if len(backup_pipx) != 0:
+        if backup_pipx[0]["version"] != ver:
             print("Updating BackUpUtility using pipx...")
             p = subprocess.run(
-                [py, "-m", "pipx", "install", downloadUrl, "--force"],
+                [py, "-m", "pipx", "install", download_url, "--force"],
                 stdout=subprocess.DEVNULL,
             )
             if p.returncode != 0:
                 p = subprocess.run(
-                    ["pipx", "install", downloadUrl, "--force"],
+                    ["pipx", "install", download_url, "--force"],
                     stdout=subprocess.DEVNULL,
                 )
 

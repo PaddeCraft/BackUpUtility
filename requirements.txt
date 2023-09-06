@@ -1,6 +1,0 @@
-rich
-toml
-typer
-humanize
-requests
-inquirerpy

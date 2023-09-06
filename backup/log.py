@@ -2,7 +2,7 @@ import logging
 
 
 def configure(cfg):
-    logging.basicConfig(filename=cfg["logPath"], level=logging.DEBUG)
+    logging.basicConfig(filename=cfg["log_path"], level=logging.DEBUG)
 
 
 def log(message, error=False):
