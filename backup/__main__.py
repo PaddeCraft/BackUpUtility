@@ -11,7 +11,7 @@ from rich.progress import Progress
 from backup.config import *
 from backup.update import update as update_app
 from backup.log import configure, log
-from backup.layout import update_info, terminal, info_layout, finish_layout
+from backup.layout import Live, update_info, info_layout, finish_msg, layout
 
 from backup.__init__ import VERSION
 
@@ -69,13 +69,19 @@ def backup(
     update: bool = False,
 ):
     global total_files, total_size, files, size, error_files
+    
+    # ---------------------------------------------------------------------------- #
+    #                                 Sub-Commands                                 #
+    # ---------------------------------------------------------------------------- #
     if version:
         print("PaddeCraft's Backup Utility v" + VERSION)
         print("Copyright (C) PaddeCraft")
         exit(0)
+        
     if update:
         update_app()
         exit(0)
+        
     if create_config:
         questions = [
             {
@@ -89,6 +95,10 @@ def backup(
         create_default_config(result[0], filename)
         print("Configuration created.")
         exit(0)
+        
+    # ---------------------------------------------------------------------------- #
+    #                                Config loading                                #
+    # ---------------------------------------------------------------------------- #
     if config_file_name is None:
         existing_configs = get_configs()
         if len(existing_configs) == 0:
@@ -124,11 +134,20 @@ def backup(
     )
     time.sleep(5)
 
-    # Configure logging
+    # ---------------------------------------------------------------------------- #
+    #                                Initialisation                                #
+    # ---------------------------------------------------------------------------- #
     configure(cfg)
-    with Progress(console=terminal) as progress:
+    progress = Progress()
+    
+    layout["progress"].update(progress)
+    
+    # ---------------------------------------------------------------------------- #
+    #                                   Main code                                  #
+    # ---------------------------------------------------------------------------- #
+    with Live(layout, refresh_per_second=15, screen=True):
         # Progress bar with no status for indicating the deleting
-        progress.log(info_layout("Deleting last backup..."))
+        info_layout("Deleting last backup...")
         deleting_bar = progress.add_task(
             "[bold]Deleting last backup [/bold] ", total=None
         )
@@ -144,7 +163,7 @@ def backup(
                 log(f"Error deleting last backup: {str(e)}", error=True)
 
         progress.update(deleting_bar, visible=False)
-        progress.log(info_layout("Indexing directories..."))
+        info_layout("Indexing directories...")
         indexing_bar = progress.add_task(
             "[bold]Calculating space requirements [/bold] ", total=None
         )
@@ -198,16 +217,23 @@ def backup(
                 compresslevel=comp_level,
             )
 
+        backup_start = time.time()
+
         # The backup phase
         for f in iterate_files(cfg["paths"], cfg["excludes"]):
             if not os.access(f["src"], os.R_OK):
                 log(f"Error: {f['src']} is not readable.", error=True)
                 continue
+            
+            # Rate, in bytes/s
+            rate = size / (time.time() - backup_start)
 
             files += 1
             sz = os.path.getsize(f["src"])
             size += sz
-            progress.log(update_info(f["src"], total_files, total_size, files, size))
+            
+            
+            update_info(f["src"], total_files, total_size, files, size, rate, sz)
             try:
                 if cfg["use_zip"]:
                     zip.write(f["src"], f["src"][f["main_length"] :])
@@ -243,14 +269,16 @@ def backup(
                 error_files += 1
             progress.update(backupBar, advance=sz)
 
-        # Close the zip file if it was used
-        if cfg["use_zip"]:
-            zip.close()
-        progress.log(finish_layout(error_files, files, size, cfg))
-        log(
-            f"""\n
-          Backup finished.
-          {error_files} files could not be backed up.
-          {files} files were backed up.
-          {size} bytes were backed up."""
-        )
+    # Close the zip file if it was used
+    if cfg["use_zip"]:
+        zip.close()
+        
+    # Completion messages
+    finish_msg(error_files, files, size, cfg)
+    log(
+        f"""\n
+      Backup finished.
+      {error_files} files could not be backed up.
+      {files} files were backed up.
+      {size} bytes were backed up."""
+    )
