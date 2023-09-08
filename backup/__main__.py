@@ -2,6 +2,7 @@ import zipfile
 from typer import Typer
 
 import os
+import stat
 import zipfile
 import shutil
 
@@ -33,17 +34,26 @@ def time_suffix(day):
 
 def iterate_files(path_list, exclude_list):
     for path in path_list:
-        for root, _, files in os.walk(path):
+        for root, _, files in os.walk(path, followlinks=True):
             for file in files:
                 include = True
+                merged = os.path.join(root, file)
+                
                 for exclude in exclude_list:
-                    if exclude.replace("\\", "/") in os.path.join(root, file).replace(
+                    if exclude.replace("\\", "/") in merged.replace(
                         "\\", "/"
                     ):
                         include = False
+                
+                if stat.S_ISFIFO(os.stat(merged).st_mode):
+                    include = False
+                    
+                if merged.startswith("/dev"):
+                    include = False
+
                 if include:
                     yield {
-                        "src": os.path.join(root, file),
+                        "src": merged,
                         "relative": file,
                         "main": path,
                         "main_length": len(path),
