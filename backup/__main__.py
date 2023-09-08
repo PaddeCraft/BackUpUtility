@@ -34,23 +34,21 @@ def time_suffix(day):
 
 def iterate_files(path_list, exclude_list):
     for path in path_list:
-        for root, _, files in os.walk(path, followlinks=True):
+        for root, _, files in os.walk(path):
             for file in files:
                 include = True
                 merged = os.path.join(root, file)
-                
+
                 for exclude in exclude_list:
-                    if exclude.replace("\\", "/") in merged.replace(
-                        "\\", "/"
-                    ):
+                    if exclude.replace("\\", "/") in merged.replace("\\", "/"):
                         include = False
 
-                try:                
+                try:
                     if stat.S_ISFIFO(os.stat(merged).st_mode):
                         include = False
                 except Exception:
                     include = False
-                    
+
                 if merged.startswith("/dev"):
                     include = False
 

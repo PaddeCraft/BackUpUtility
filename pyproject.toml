@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "backup"
-version = "1.2.2"
+version = "1.2.3"
 description = "PaddeCraft's backup tool"
 authors = ["PaddeCraft <70023807+PaddeCraft@users.noreply.github.com>"]
 license = "BSD-3-Clause"
