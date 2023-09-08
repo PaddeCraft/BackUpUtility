@@ -9,11 +9,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
             - uses: actions/setup-python@v4
               with:
                   python-version: "3.8"
                   architecture: "x64"
-                  fetch-depth: 0
 
             - uses: dorny/paths-filter@v2
               id: new
