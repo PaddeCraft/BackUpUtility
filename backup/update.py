@@ -56,7 +56,7 @@ def update():
             }
         )
 
-    backup_pip = [p for p in pkgs_pip if p["name"] == "BackUp"]
+    backup_pip = [p for p in pkgs_pip if p["name"] == "backup"]
 
     if len(backup_pip) != 0:
         if backup_pip[0]["version"] != ver:
@@ -73,7 +73,7 @@ def update():
                         ["pip3", "install", download_url], stdout=subprocess.DEVNULL
                     )
 
-    backup_pipx = [p for p in pkgs_pipx if p["name"] == "BackUp"]
+    backup_pipx = [p for p in pkgs_pipx if p["name"] == "backup"]
 
     if len(backup_pipx) != 0:
         if backup_pipx[0]["version"] != ver:
