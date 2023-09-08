@@ -44,8 +44,11 @@ def iterate_files(path_list, exclude_list):
                         "\\", "/"
                     ):
                         include = False
-                
-                if stat.S_ISFIFO(os.stat(merged).st_mode):
+
+                try:                
+                    if stat.S_ISFIFO(os.stat(merged).st_mode):
+                        include = False
+                except Exception:
                     include = False
                     
                 if merged.startswith("/dev"):
