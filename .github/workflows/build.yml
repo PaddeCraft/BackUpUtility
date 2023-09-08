@@ -1,4 +1,4 @@
-name: Automatticly build wheel if version changes
+name: Auto-Release on version bump
 on:
     push:
         branches:
@@ -11,45 +11,49 @@ jobs:
             - uses: actions/checkout@v3
             - uses: actions/setup-python@v4
               with:
-                  python-version: "3.7"
+                  python-version: "3.8"
                   architecture: "x64"
+                  fetch-depth: 0
+
             - uses: dorny/paths-filter@v2
               id: new
               with:
                   filters: |
                       init:
                         - 'backup/__init__.py'
-            # - if: steps.new.outputs.init == 'true'
-            #   run: pip install wheel
-            # - if: steps.new.outputs.init == 'true'
-            #   run: python setup.py bdist_wheel --python-tag py3
+
             - id: version
               run: |
                   version=$(python -c "import backup; print(backup.VERSION)")
                   echo "::set-output name=VERSION::$version"
-            # - name: "Build Changelog"
-            #   id: build_changelog
-            #   uses: mikepenz/release-changelog-builder-action@v2
-            #   env:
-            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Get Commits since last release
+              id: changes
+              uses: simbo/changes-since-last-release-action@v1
+
+            - name: Display changes since last release
+              run: |
+                  echo "Changes since ${{ steps.changes.outputs.last-tag }}:"
+                  echo "${{ steps.changes.outputs.log }}"
+
             - if: steps.new.outputs.init == 'true'
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
                   automatic_release_tag: "${{ steps.version.outputs.VERSION }}"
                   prerelease: false
-                  # files: |
-                  #     ./dist/*.whl
+
             - if: steps.new.outputs.init == 'true'
               id: release
               uses: cardinalby/git-get-release-action@v1
               env:
                   GITHUB_TOKEN: ${{ github.token }}
               with:
-                  tag: '${{ steps.version.outputs.VERSION }}'
+                  tag: "${{ steps.version.outputs.VERSION }}"
+
             - if: steps.new.outputs.init == 'true'
               uses: irongut/EditRelease@v1.2.0
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   id: ${{ steps.release.outputs.id }}
-                  body: "## Installation command\n`pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip`"
+                  body: "# ${{ steps.version.outputs.VERSION }}\n## Changelog\nThese are the changes since version ${{ steps.changes.outputs.last-tag }}:\n${{ steps.changes.outputs.log }}\n## Installation command\n`pipx install https://github.com/PaddeCraft/BackUpUtility/archive/refs/tags/${{ steps.version.outputs.VERSION }}.zip`"
