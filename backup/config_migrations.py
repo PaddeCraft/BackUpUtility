@@ -89,13 +89,18 @@ def migrate_config(fname):
             continue
 
         for action in migration["actions"]:
-            match action["action"]:
-                case "rename":
-                    data = pop_key(config, action["from"])
-                    insert_key(config, action["to"], data)
+            _action = action["action"]
 
-                case "create":
-                    insert_key(config, action["key"], action["value"])
+            # No case statement in favour of python <3.10 support
+            if _action == "rename":
+                data = pop_key(config, action["from"])
+                insert_key(config, action["to"], data)
+
+            elif _action == "create":
+                insert_key(config, action["key"], action["value"])
+
+            elif _action == "delete":
+                pop_key(config, action["key"])
 
             migration_log += (
                 " ".join([f"{k.upper()}={v}" for k, v in action.items()]) + "\n"

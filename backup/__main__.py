@@ -69,7 +69,7 @@ def backup(
     update: bool = False,
 ):
     global total_files, total_size, files, size, error_files
-    
+
     # ---------------------------------------------------------------------------- #
     #                                 Sub-Commands                                 #
     # ---------------------------------------------------------------------------- #
@@ -77,11 +77,11 @@ def backup(
         print("PaddeCraft's Backup Utility v" + VERSION)
         print("Copyright (C) PaddeCraft")
         exit(0)
-        
+
     if update:
         update_app()
         exit(0)
-        
+
     if create_config:
         questions = [
             {
@@ -95,7 +95,7 @@ def backup(
         create_default_config(result[0], filename)
         print("Configuration created.")
         exit(0)
-        
+
     # ---------------------------------------------------------------------------- #
     #                                Config loading                                #
     # ---------------------------------------------------------------------------- #
@@ -139,9 +139,9 @@ def backup(
     # ---------------------------------------------------------------------------- #
     configure(cfg)
     progress = Progress()
-    
+
     layout["progress"].update(progress)
-    
+
     # ---------------------------------------------------------------------------- #
     #                                   Main code                                  #
     # ---------------------------------------------------------------------------- #
@@ -224,15 +224,14 @@ def backup(
             if not os.access(f["src"], os.R_OK):
                 log(f"Error: {f['src']} is not readable.", error=True)
                 continue
-            
+
             # Rate, in bytes/s
             rate = size / (time.time() - backup_start)
 
             files += 1
             sz = os.path.getsize(f["src"])
             size += sz
-            
-            
+
             update_info(f["src"], total_files, total_size, files, size, rate, sz)
             try:
                 if cfg["use_zip"]:
@@ -272,7 +271,7 @@ def backup(
     # Close the zip file if it was used
     if cfg["use_zip"]:
         zip.close()
-        
+
     # Completion messages
     finish_msg(error_files, files, size, cfg)
     log(

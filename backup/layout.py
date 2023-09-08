@@ -15,7 +15,7 @@ layout.split_column(
     Layout(" ", name="spacer"),
     Layout(name="info"),
     Layout(" ", name="spacer2"),
-    Layout(" ", name="progress")
+    Layout(" ", name="progress"),
 )
 
 layout["title"].size = 3
@@ -27,9 +27,9 @@ layout["progress"].size = 1
 def update_info(path, total_files, total_size, files, size, rate, file_size):
     if rate == 0:
         rate = 1
-        
-    completion_time = datetime.now() + timedelta(seconds=file_size/rate)
-        
+
+    completion_time = datetime.now() + timedelta(seconds=file_size / rate)
+
     layout["info"].update(
         dedent(
             f"""\
